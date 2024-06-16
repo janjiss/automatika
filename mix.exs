@@ -60,7 +60,8 @@ defmodule Automatika.MixProject do
       {:cowlib, "~> 2.6.0", override: true},
       {:httpoison, "~> 2.0"},
       {:astro, "~> 1.0"},
-      {:tzdata, "~> 1.1"}
+      {:tzdata, "~> 1.1"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 
