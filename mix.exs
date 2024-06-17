@@ -61,7 +61,8 @@ defmodule Automatika.MixProject do
       {:httpoison, "~> 2.0"},
       {:astro, "~> 1.0"},
       {:tzdata, "~> 1.1"},
-      {:mock, "~> 0.3.0", only: :test}
+      {:mock, "~> 0.3.0", only: :test},
+      {:lua, "~> 0.0.14"}
     ]
   end
 
