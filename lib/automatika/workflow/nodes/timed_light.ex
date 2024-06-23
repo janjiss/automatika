@@ -1,6 +1,6 @@
 defmodule Automatika.Workflow.Nodes.TimedLight do
   use GenServer
-  alias Automatika.Workflow.Components.MQTT
+  alias Automatika.Workflow.Components.MQTTManager
 
   # 5 minutes in milliseconds
   @off_delay 5 * 60 * 1000
@@ -23,7 +23,7 @@ defmodule Automatika.Workflow.Nodes.TimedLight do
   end
 
   def handle_continue(:subscribe, st = %{sensor_topics: sensor_topics}) do
-    MQTT.subscribe(sensor_topics, self())
+    MQTTManager.subscribe(sensor_topics, self())
 
     {:noreply, st}
   end
@@ -36,7 +36,7 @@ defmodule Automatika.Workflow.Nodes.TimedLight do
   end
 
   def handle_info(:turn_off_light, st = %{light_topics: light_topics}) do
-    MQTT.publish(light_topics, turn_off_signal())
+    MQTTManager.publish(light_topics, turn_off_signal())
 
     {:noreply, %{st | timer_ref: nil}}
   end
@@ -47,10 +47,10 @@ defmodule Automatika.Workflow.Nodes.TimedLight do
        ) do
     case is_sun_up?() do
       true ->
-        MQTT.publish(light_topics, turn_off_signal())
+        MQTTManager.publish(light_topics, turn_off_signal())
 
       false ->
-        MQTT.publish(light_topics, turn_on_signal())
+        MQTTManager.publish(light_topics, turn_on_signal())
     end
 
     if timer_ref, do: Process.cancel_timer(timer_ref)

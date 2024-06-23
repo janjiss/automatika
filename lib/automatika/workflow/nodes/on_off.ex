@@ -1,6 +1,6 @@
 defmodule Automatika.Workflow.Nodes.OnOff do
   use GenServer
-  alias Automatika.Workflow.Components.MQTT
+  alias Automatika.Workflow.Components.MQTTManager
 
   def start_link(opts) do
     GenServer.start_link(__MODULE__, opts)
@@ -19,7 +19,7 @@ defmodule Automatika.Workflow.Nodes.OnOff do
   end
 
   def handle_continue(:subscribe, st = %{switch_topics: switch_topics}) do
-    MQTT.subscribe(switch_topics, self())
+    MQTTManager.subscribe(switch_topics, self())
 
     {:noreply, st}
   end
@@ -37,7 +37,7 @@ defmodule Automatika.Workflow.Nodes.OnOff do
          %{"action" => "on"},
          state = %{device_topics: device_topics}
        ) do
-    MQTT.publish(device_topics, %{"state" => "ON"})
+    MQTTManager.publish(device_topics, %{"state" => "ON"})
 
     state
   end
@@ -46,7 +46,7 @@ defmodule Automatika.Workflow.Nodes.OnOff do
          %{"action" => "off"},
          state = %{device_topics: device_topics}
        ) do
-    MQTT.publish(device_topics, %{"state" => "OFF"})
+    MQTTManager.publish(device_topics, %{"state" => "OFF"})
 
     state
   end

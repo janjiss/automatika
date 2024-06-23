@@ -10,7 +10,10 @@ defmodule Automatika.Workflow.Nodes.LuaTest do
     """
 
     {:ok, lua_pid} =
-      Automatika.Workflow.Nodes.Lua.start_link(%{output_1: self(), lua_script: lua_script})
+      Automatika.Workflow.Nodes.Lua.start_link(
+        outputs: [self()],
+        lua_script: lua_script
+      )
 
     GenServer.cast(lua_pid, {:publish, payload})
     assert_receive {:"$gen_cast", {:publish, %{"on" => true, "movement" => true}}}

@@ -9,7 +9,7 @@ defmodule Automatika.Supervisor do
   def init(:ok) do
     children = [
       Supervisor.child_spec(
-        {Automatika.Workflow.Components.MQTT,
+        {Automatika.Workflow.Components.MQTTManager,
          %{
            emqtt_host: Application.get_env(:automatika, :mqtt_host),
            emqtt_port: Application.get_env(:automatika, :mqtt_port),

@@ -6,19 +6,25 @@ defmodule Automatika.Workflow.Nodes.Sunset do
   end
 
   def init(opts) do
-    output_1 = opts[:output_1]
-    output_2 = opts[:output_2]
+    outputs = opts[:outputs]
 
-    {:ok, %{output_1: output_1, output_2: output_2}}
+    {:ok, {outputs}}
   end
 
   def handle_cast(
         {:publish, payload},
-        state = %{output_1: output_1, output_2: output_2}
+        state = {outputs}
       ) do
     case is_sun_up?() do
-      true -> GenServer.cast(output_1, {:publish, payload})
-      false -> GenServer.cast(output_2, {:publish, payload})
+      true ->
+        outputs
+        |> Enum.at(0)
+        |> GenServer.cast({:publish, payload})
+
+      false ->
+        outputs
+        |> Enum.at(1)
+        |> GenServer.cast({:publish, payload})
     end
 
     {:noreply, state}

@@ -26,11 +26,11 @@ defmodule Automatika.Workflow.Nodes.SunsetTest do
         end
       end)
 
-    {:ok, output_1: output_1, output_2: output_2, payload: payload}
+    {:ok, outputs: [output_1, output_2], payload: payload}
   end
 
   test "sends message to output_1 when sun is up",
-       %{output_1: output_1, output_2: output_2, payload: payload} = _context do
+       %{outputs: outputs, payload: payload} = _context do
     with_mocks [
       {Astro, [],
        [
@@ -38,7 +38,7 @@ defmodule Automatika.Workflow.Nodes.SunsetTest do
          sunrise: fn _, _, _ -> {:ok, DateTime.add(DateTime.utc_now(), -60)} end
        ]}
     ] do
-      {:ok, sunset_pid} = Sunset.start_link(%{output_1: output_1, output_2: output_2})
+      {:ok, sunset_pid} = Sunset.start_link(outputs: outputs)
       GenServer.cast(sunset_pid, {:publish, payload})
 
       assert_receive :output_1
@@ -46,7 +46,7 @@ defmodule Automatika.Workflow.Nodes.SunsetTest do
   end
 
   test "sends message to output_2 when sun is down",
-       %{output_1: output_1, output_2: output_2, payload: payload} = _context do
+       %{outputs: outputs, payload: payload} = _context do
     with_mocks [
       {Astro, [],
        [
@@ -54,7 +54,7 @@ defmodule Automatika.Workflow.Nodes.SunsetTest do
          sunrise: fn _, _, _ -> {:ok, DateTime.add(DateTime.utc_now(), 60)} end
        ]}
     ] do
-      {:ok, sunset_pid} = Sunset.start_link(%{output_1: output_1, output_2: output_2})
+      {:ok, sunset_pid} = Sunset.start_link(outputs: outputs)
       GenServer.cast(sunset_pid, {:publish, payload})
 
       assert_receive :output_2

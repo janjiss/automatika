@@ -1,4 +1,4 @@
-defmodule Automatika.Workflow.Components.MQTT do
+defmodule Automatika.Workflow.Components.MQTTManager do
   use GenServer
 
   def start_link(opts) do
@@ -40,7 +40,7 @@ defmodule Automatika.Workflow.Components.MQTT do
     subscriber_pids = Map.get(subscribers, topic, [])
 
     Enum.each(subscriber_pids, fn subscriber_pid ->
-      GenServer.cast(subscriber_pid, {:publish, %{payload: Jason.decode!(payload), topic: topic}})
+      GenServer.cast(subscriber_pid, {:publish, %{payload: Jason.decode!(payload)}})
     end)
 
     {:noreply, state}

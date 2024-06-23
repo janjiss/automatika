@@ -8,14 +8,18 @@ defmodule Automatika.Workflow.Nodes.Lua do
 
   def init(opts) do
     lua_script = opts[:lua_script]
-    output_1 = opts[:output_1]
+    outputs = opts[:outputs]
 
-    {:ok, %{output_1: output_1, lua_script: lua_script}}
+    {:ok, {outputs, lua_script}}
   end
 
-  def handle_cast({:publish, payload}, state = %{output_1: output_1, lua_script: lua_script}) do
+  def handle_cast({:publish, payload}, state = {outputs, lua_script}) do
     modified_payload = execute_lua_script(lua_script, payload)
-    GenServer.cast(output_1, {:publish, modified_payload})
+
+    outputs
+    |> Enum.at(0)
+    |> GenServer.cast({:publish, modified_payload})
+
     {:noreply, state}
   end
 
