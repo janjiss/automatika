@@ -1,7 +1,7 @@
 defmodule Automatika.Workflow.Nodes.LuaTest do
   use ExUnit.Case
 
-  test "receive message & modifies the payload with lua" do
+  test "receive message & modify the payload with lua" do
     payload = %{"movement" => true}
 
     lua_script = """

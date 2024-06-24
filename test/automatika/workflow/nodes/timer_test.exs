@@ -1,7 +1,7 @@
 defmodule Automatika.Workflow.Nodes.TimerTest do
   use ExUnit.Case
 
-  test "receiving of single message on timer" do
+  test "receiving multiple messages and resetting the timer and then forwarding the message" do
     payload_1 = %{"movement" => false}
     payload_2 = %{"movement" => true}
 

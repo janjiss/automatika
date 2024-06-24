@@ -1,15 +1,13 @@
 defmodule Automatika.Workflow.Nodes.LuaBooleanTest do
   use ExUnit.Case
 
-  test "receive message & returns boolean result from lua script" do
-    payload = %{"movement" => true}
-
+  test "receive message & return output_1 if lua returns true and output_2 if lua returns false" do
     self_pid = self()
 
     output_1 =
       spawn(fn ->
         receive do
-          message ->
+          {:"$gen_cast", {:publish, %{"movement" => true}}} ->
             send(self_pid, :output_1)
         end
       end)
@@ -17,7 +15,7 @@ defmodule Automatika.Workflow.Nodes.LuaBooleanTest do
     output_2 =
       spawn(fn ->
         receive do
-          message ->
+          {:"$gen_cast", {:publish, %{"movement" => false}}} ->
             send(self_pid, :output_2)
         end
       end)

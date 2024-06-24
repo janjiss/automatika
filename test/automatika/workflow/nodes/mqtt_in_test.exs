@@ -1,7 +1,7 @@
 defmodule Automatika.Workflow.Nodes.MQTTInTest do
   use ExUnit.Case
 
-  test "sends message to output_1 when sun is up" do
+  test "send message to outputs on mqtt_in message" do
     topics = ["lamp"]
     payload = %{"payload_key" => "payload_value"}
 
